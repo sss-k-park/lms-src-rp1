@@ -1704,3 +1704,9 @@ html, body {
 	float: left;
 	width: 50%;
 }
+
+/* SCROLL */
+.scrollable-tbody{
+	max-height: 550px;
+	overflow-y: auto;
+}

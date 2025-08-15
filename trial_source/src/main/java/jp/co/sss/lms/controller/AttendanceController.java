@@ -16,10 +16,11 @@ import jp.co.sss.lms.form.AttendanceForm;
 import jp.co.sss.lms.service.StudentAttendanceService;
 import jp.co.sss.lms.util.Constants;
 
+
 /**
  * 勤怠管理コントローラ
  * 
- * @author 東京ITスクール1
+ * @author 東京ITスクール
  */
 @Controller
 @RequestMapping("/attendance")
@@ -46,10 +47,14 @@ public class AttendanceController {
 		List<AttendanceManagementDto> attendanceManagementDtoList = studentAttendanceService
 				.getAttendanceManagement(loginUserDto.getCourseId(), loginUserDto.getLmsUserId());
 		model.addAttribute("attendanceManagementDtoList", attendanceManagementDtoList);
+		
+		//
+		boolean result = studentAttendanceService.getNotEnterCount(loginUserDto.getLmsUserId());
+		model.addAttribute("result", result);
 
 		return "attendance/detail";
 	}
-
+	
 	/**
 	 * 勤怠管理画面 『出勤』ボタン押下
 	 * 
@@ -143,5 +148,8 @@ public class AttendanceController {
 
 		return "attendance/detail";
 	}
+	
+	
+
 
 }

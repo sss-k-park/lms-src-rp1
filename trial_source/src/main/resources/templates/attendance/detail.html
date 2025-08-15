@@ -16,6 +16,15 @@
 			<span>[[${message}]]</span>
 		</div>
 	</th:block>
+	
+	<script type="text/javascript" th:inline="javascript">
+    const result = /*[[${result}]]*/ false;
+    if (result === true) {
+        alert("過去日の勤怠に未入力があります。");
+    }
+	</script>
+	
+
 
 	<h2>勤怠管理</h2>
 
@@ -72,6 +81,8 @@
 			</table>
 		</div>
 	</div>
+	
+	
 
 	<script type="text/javascript" th:inline="javascript">
 		$(function() {
@@ -87,6 +98,8 @@
 			return hours + ':' + minutes;
 		}
 	</script>
+	
+	
 
 </body>
 </html>
