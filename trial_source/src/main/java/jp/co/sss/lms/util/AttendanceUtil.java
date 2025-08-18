@@ -131,6 +131,56 @@ public class AttendanceUtil {
 		}
 		return map;
 	}
+	
+	/**
+	 *勤怠時間取得
+	 * 
+	 * @return 勤怠時間
+	 * @author 朴
+	 */
+	public LinkedHashMap<Integer, String> setHourTime() {
+		LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+		map.put(null, "");
+		for (int i = 0; i < 24; i++) {
+			String formatted =String.format("%02d", i);
+			map.put(i,formatted);
+		}
+		return map;
+	}
+	
+	
+	/**
+	 *勤怠分取得
+	 * 
+	 * @return 勤怠分
+	 * @author 朴
+	 */
+	public LinkedHashMap<Integer, String> setMinuteTime() {
+		LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
+		map.put(null, "");
+		for (int i = 0; i < 60; i++) {
+			String formatted =String.format("%02d", i);
+			map.put(i,formatted);
+		}
+		return map;
+	}
+	
+	
+	public Integer getHour(String time) {
+		if(time ==null||time.isEmpty()) {
+			return null;
+		}
+		return Integer.parseInt(time.split(":")[0]);
+		
+	}
+	
+	public Integer getMinute(String time) {
+		if(time ==null||time.isEmpty()) {
+			return null;
+		}
+		return Integer.parseInt(time.split(":")[1]);
+		
+	}
 
 	/**
 	 * 研修日の判定
