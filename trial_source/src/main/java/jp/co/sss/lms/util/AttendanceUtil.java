@@ -131,9 +131,9 @@ public class AttendanceUtil {
 		}
 		return map;
 	}
-	
+
 	/**
-	 *勤怠時間取得
+	 *勤怠時間取得(task26)
 	 * 
 	 * @return 勤怠時間
 	 * @author 朴
@@ -142,15 +142,14 @@ public class AttendanceUtil {
 		LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
 		map.put(null, "");
 		for (int i = 0; i < 24; i++) {
-			String formatted =String.format("%02d", i);
-			map.put(i,formatted);
+			String formatted = String.format("%02d", i);
+			map.put(i, formatted);
 		}
 		return map;
 	}
-	
-	
+
 	/**
-	 *勤怠分取得
+	 *勤怠分取得(task26)
 	 * 
 	 * @return 勤怠分
 	 * @author 朴
@@ -159,27 +158,40 @@ public class AttendanceUtil {
 		LinkedHashMap<Integer, String> map = new LinkedHashMap<>();
 		map.put(null, "");
 		for (int i = 0; i < 60; i++) {
-			String formatted =String.format("%02d", i);
-			map.put(i,formatted);
+			String formatted = String.format("%02d", i);
+			map.put(i, formatted);
 		}
 		return map;
 	}
-	
-	
+
+	/**
+	 * 勤怠時間(task26)
+	 * 
+	 * @param  time
+	 * @return 勤怠時間
+	 * @author 朴
+	 */
 	public Integer getHour(String time) {
-		if(time ==null||time.isEmpty()) {
+		if (time == null || time.isEmpty()) {
 			return null;
 		}
 		return Integer.parseInt(time.split(":")[0]);
-		
+
 	}
-	
+
+	/**
+	 * 勤怠分(task26)
+	 * 
+	 * @param time
+	 * @return 勤怠分
+	 * @author 朴
+	 */
 	public Integer getMinute(String time) {
-		if(time ==null||time.isEmpty()) {
+		if (time == null || time.isEmpty()) {
 			return null;
 		}
 		return Integer.parseInt(time.split(":")[1]);
-		
+
 	}
 
 	/**

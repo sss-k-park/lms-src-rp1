@@ -220,7 +220,9 @@ public class StudentAttendanceService {
 		attendanceForm.setUserName(loginUserDto.getUserName());
 		attendanceForm.setLeaveFlg(loginUserDto.getLeaveFlg());
 		attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
+		//時間マップ設定（task26)
 		attendanceForm.setSetHourTime(attendanceUtil.setHourTime());
+		//分マップ設定（task26)
 		attendanceForm.setSetMinuteTime(attendanceUtil.setMinuteTime());
 
 		// 途中退校している場合のみ設定
@@ -245,17 +247,17 @@ public class StudentAttendanceService {
 				dailyAttendanceForm.setBlankTimeValue(String.valueOf(
 						attendanceUtil.calcBlankTime(attendanceManagementDto.getBlankTime())));
 			}
-			
-			//DTOセット
+
+			//DTOからト開始・終了時刻を取得（task26)
 			String startTime = attendanceManagementDto.getTrainingStartTime();
 			String endTime = attendanceManagementDto.getTrainingEndTime();
-			
-			//出勤、退勤時間の抜き出し
+
+			//出勤、退勤の時間、分フォーム設定(task26)
 			dailyAttendanceForm.setAttendanceStartHour(attendanceUtil.getHour(startTime));
 			dailyAttendanceForm.setAttendanceStartMinute(attendanceUtil.getMinute(endTime));
 			dailyAttendanceForm.setAttendanceEndHour(attendanceUtil.getHour(startTime));
 			dailyAttendanceForm.setAttendanceEndMinute(attendanceUtil.getMinute(endTime));
-			
+
 			dailyAttendanceForm.setStatus(String.valueOf(attendanceManagementDto.getStatus()));
 			dailyAttendanceForm.setNote(attendanceManagementDto.getNote());
 			dailyAttendanceForm.setSectionName(attendanceManagementDto.getSectionName());
@@ -306,23 +308,39 @@ public class StudentAttendanceService {
 			}
 			tStudentAttendance.setLmsUserId(lmsUserId);
 			tStudentAttendance.setAccountId(loginUserDto.getAccountId());
-			// 出勤時刻整形
-			TrainingTime trainingStartTime = null;
-			trainingStartTime = new TrainingTime(dailyAttendanceForm.getTrainingStartTime());
-			tStudentAttendance.setTrainingStartTime(trainingStartTime.getFormattedString());
-			// 退勤時刻整形
-			TrainingTime trainingEndTime = null;
-			trainingEndTime = new TrainingTime(dailyAttendanceForm.getTrainingEndTime());
-			tStudentAttendance.setTrainingEndTime(trainingEndTime.getFormattedString());
+
+			// 出勤時間、分を設定（task26)
+			Integer startHour = dailyAttendanceForm.getAttendanceStartHour();
+			Integer startMinute = dailyAttendanceForm.getAttendanceStartMinute();
+
+			// 退勤時間、分を設定（task26)
+			Integer endHour = dailyAttendanceForm.getAttendanceStartHour();
+			Integer endMinute = dailyAttendanceForm.getAttendanceStartMinute();
+
+			try {
+				//出勤時間（時）、出勤時間（分）をhh:mm形式で設定（task26)
+				TrainingTime trainingStartTime = new TrainingTime(startHour, startMinute);
+				String formattedStartTime = trainingStartTime.getFormattedString();
+				tStudentAttendance.setTrainingStartTime(formattedStartTime);
+
+				//退勤時間（時）、出勤時間（分）をhh:mm形式で設定（task26)
+				TrainingTime trainingEndTime = new TrainingTime(endHour, endMinute);
+				String formattedEndTime = trainingEndTime.getFormattedString();
+				tStudentAttendance.setTrainingEndTime(formattedEndTime);
+
+				// 遅刻早退ステータス
+				if ((trainingStartTime != null || trainingEndTime != null)
+						&& !dailyAttendanceForm.getStatusDispName().equals("欠席")) {
+					AttendanceStatusEnum attendanceStatusEnum = attendanceUtil
+							.getStatus(trainingStartTime, trainingEndTime);
+					tStudentAttendance.setStatus(attendanceStatusEnum.code);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			// 中抜け時間
 			tStudentAttendance.setBlankTime(dailyAttendanceForm.getBlankTime());
-			// 遅刻早退ステータス
-			if ((trainingStartTime != null || trainingEndTime != null)
-					&& !dailyAttendanceForm.getStatusDispName().equals("欠席")) {
-				AttendanceStatusEnum attendanceStatusEnum = attendanceUtil
-						.getStatus(trainingStartTime, trainingEndTime);
-				tStudentAttendance.setStatus(attendanceStatusEnum.code);
-			}
 			// 備考
 			tStudentAttendance.setNote(dailyAttendanceForm.getNote());
 			// 更新者と更新日時
@@ -346,23 +364,31 @@ public class StudentAttendanceService {
 		// 完了メッセージ
 		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
 	}
-	
-	
+
+	/**
+	 * 過去未入力ダイアログ判定（task25)
+	 * 
+	 * @param lmsUserId
+	 * @return true
+	 * @throws ParseException
+	 * @author 朴
+	 */
 	public boolean getNotEnterCount(Integer lmsUserId) {
-	    try {
-	        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-	        Date trainingDate = df.parse(df.format(new Date()));
-	        // 引数の順序をインターフェース定義に合わせる: lmsUserId, deleteFlg, trainingDate
-	        Integer notEnterCount = tStudentAttendanceMapper.notEnterCount(lmsUserId, Constants.DB_FLG_FALSE, trainingDate);
-	        if(notEnterCount>0) {
-	        	return true;
-	        }else {
-	        	return false;
-	        }
-	    } catch (ParseException e) {
-	        e.printStackTrace();
-	        return false;
-	    }
+		try {
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			Date trainingDate = df.parse(df.format(new Date()));
+			// 引数の順序をインターフェース定義に合わせる: lmsUserId, deleteFlg, trainingDate
+			Integer notEnterCount = tStudentAttendanceMapper.notEnterCount(lmsUserId, Constants.DB_FLG_FALSE,
+					trainingDate);
+			if (notEnterCount > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

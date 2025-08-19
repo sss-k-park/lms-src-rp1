@@ -21,21 +21,14 @@ public class AttendanceManagementDto extends StudentAttendanceDto {
 	private String blankTimeValue;
 	/** セクション名 */
 	private String sectionName;
-	/** 出勤時間（時） */
+	/** 出勤時間（時）（task26) */
 	private Integer attendanceStartHour;
-	/** 出勤時間（時） */
-	//private String attendanceStartHourValue;
-	/** 出勤時間（分） */
+	/** 出勤時間（分）（task26) */
 	private Integer attendanceStartMinute;
-	/** 出勤時間（分） */
-	//private String attendanceStartMinuteValue;
-	/** 退勤時間（時） */
+	/** 退勤時間（時）（task26) */
 	private Integer attendanceEndHour;
-	/** 退勤時間（時） */
-	//private String attendanceEndHourValue;
-	/** 退勤時間（分） */
+	/** 退勤時間（分）（task26) */
 	private Integer attendanceEndMinute;
-	/** 退勤時間（分） */
-	//private String attendanceEndMinuteValue;
+	
 
 }
