@@ -369,7 +369,8 @@ public class StudentAttendanceService {
 	 * 過去未入力ダイアログ判定（task25)
 	 * 
 	 * @param lmsUserId
-	 * @return true
+	 * @return 未入力確認ダイアログ判定値
+				（boolen 勤怠入力漏れあり：ture/勤怠入力漏れなし：false)
 	 * @throws ParseException
 	 * @author 朴
 	 */
